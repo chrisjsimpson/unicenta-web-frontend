@@ -1,3 +1,6 @@
+<?php
+/* Main page handler for add-category script */
+?>
 <h1>Add Category</h1>
 
 <form name="add-category" id="add-category" action="<?php echo ADMIN_BASE_URL; ?>?p=add-category&save" method="POST">
