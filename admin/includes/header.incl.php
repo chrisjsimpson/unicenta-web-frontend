@@ -1,5 +1,1 @@
-<h1>Admin</h1>
-
-<ul>
-	<li><a href="<? echo BASE_URL; ?>?p=add-product">Add Product</a></li>
-</ul>
+<h1><a href="<?php echo ADMIN_BASE_URL; ?>">Admin Home</a></h1>

@@ -9,23 +9,42 @@ $p = $_GET['p'];
 	//Determine correct page
 	switch($p)
 	{
-		case 'add-product':
-		$title = "Add a product";
-		$p = $p . 'incl.php';
+		case 'add-category':
+		$title = 'New category';
 		break;
 
-		default:
+		case 'add-product':
+		$title = "Add a product";
+		break;
+
+		default: //If no match, load admin home page for login
 		$title = 'Admin Welcome';
-		$p = 'home.incl.php';
 		break; 
 	}//End page switch
 
+//Load admin config file
+	require_once('includes/admin-config.incl.php');
+
 //Load correct page
+	//Check authentication
+	require_once('Auth.php');
+	$options = array(
+		'dsn' => "mysql://unicenta:password@localhost/auth"
+		);
+	$pearAuth = new Auth("DB", $options, "loginFunction");
+	$pearAuth->start();
+
+//Only allow admin access to authenticated users:
+if($pearAuth->checkAuth())
+{
+	//Load functions
+	require_once('includes/admin-functions.incl.php');
 	//Load header
 	require_once('includes/header.incl.php');
 
 	//Load page
-	require_once("modules/$p");
+	require_once("modules/$p/$p.incl.php"); //Each modules has its own directory
 
 	//Load footer
 	require_once('includes/footer.incl.php');
+}
