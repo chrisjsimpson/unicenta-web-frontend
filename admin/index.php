@@ -24,6 +24,8 @@ $p = $_GET['p'];
 
 //Load admin config file
 	require_once('includes/admin-config.incl.php');
+//Load global functions
+	require_once('../includes/global-functions.incl.php');
 
 //Load correct page
 	//Check authentication
@@ -43,7 +45,7 @@ if($pearAuth->checkAuth())
 	require_once('includes/header.incl.php');
 
 	//Load page
-	require_once("modules/$p/$p.incl.php"); //Each modules has its own directory
+	require_once("modules/$p/$p.handler.incl.php"); //Each modules has its own directory & page handler
 
 	//Load footer
 	require_once('includes/footer.incl.php');

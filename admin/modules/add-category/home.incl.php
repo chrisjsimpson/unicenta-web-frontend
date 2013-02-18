@@ -1,4 +1,4 @@
-<h1>Add Category</h1>
+<h2>Add Category</h2>
 
 <form name="add-category" id="add-category" action="<?php echo ADMIN_BASE_URL; ?>?p=add-category&save" method="POST">
 <fieldset>
@@ -7,7 +7,9 @@
 	<label for="category-name">Category Name</label>
 	<input type="text" name="category-name" required />
 
+	Parent Category: 
 	<select name="parent-category">
+		<option value="0">-Optional-</option>
 		<?php
 		foreach(getProductCategories($dbc) as $key=>$category)
 		{
