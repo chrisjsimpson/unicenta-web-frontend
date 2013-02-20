@@ -36,7 +36,7 @@ if(isset($_POST['parent-category']) && $_POST['parent-category'] !== '0')
 if(empty($errors))
 {
 	//clean strings
-	$categoryName = cleanString($dbc, $_POST['category-name'], null);
+	$categoryName = cleanString($dbc, trim($_POST['category-name']), null);
 
 	//Check category name does not already exist
 /*
