@@ -48,6 +48,8 @@ $pages = array(
 //Load correct page
 	//Load frontend functions
 	require_once('includes/functions.incl.php');
+	//Initialise template
+	require TEMPLATE_INIT;
 	//Load header
 	require_once('includes/header.incl.php');
 
