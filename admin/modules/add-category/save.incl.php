@@ -39,7 +39,10 @@ if(empty($errors))
 	$categoryName = cleanString($dbc, $_POST['category-name'], null);
 
 	//Check category name does not already exist
-	$q = "SELECT NAME FROM CATEGORIES WHERE NAME = '$categoryName'";
+/*
+	$q = "SELECT NAME FROM CATEGORIES WHERE NAME = '$categoryName' AND PARENTID IS NULL";
+
+	
 	$r = mysqli_query($dbc, $q);
 
 	if(mysqli_num_rows($r) > 0)
@@ -47,6 +50,7 @@ if(empty($errors))
 		$errors[] = 'Product category "' . $categoryName . '" already exists.';
 		goto reportErrors;
 	}
+*/
 	//Build intert query
 	if(isset($parentId))
 	{
@@ -58,7 +62,6 @@ if(empty($errors))
 	}
 	//Execute query:
 	$r = mysqli_query($dbc, $q);
-
 	if($r)
 	{
 		echo "Added new category '<em>$categoryName</em>' sucessfully.";
@@ -67,6 +70,6 @@ if(empty($errors))
 		echo "An error occured adding the category to the database, please try again.";
 	}
 }else{//Report any errors to the user
-reportErrors:
+//reportErrors:
 	report_errors($errors);
 }//End report any errors
