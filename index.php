@@ -42,6 +42,8 @@ $pages = array(
 
 //Load config file
 	require_once('includes/config.incl.php');
+//Open database connection
+	require(DB);
 //Load global functions
 	require_once('includes/global-functions.incl.php');
 

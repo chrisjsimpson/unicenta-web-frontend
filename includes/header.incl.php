@@ -12,3 +12,6 @@ echo TEMPLATE_BASE_URL . 'css/styles.css';
 <?php
 //Load page header
 load_header();
+
+//Load primary navigation
+load_primary_navigation($dbc);
