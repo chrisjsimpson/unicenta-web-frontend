@@ -22,7 +22,7 @@ if(isset($_POST['category-name']))
 
 
 //Validate parent category
-if(isset($_POST['parent-category']) && $_POST['parent-category'] != 0)
+if(isset($_POST['parent-category']) && $_POST['parent-category'] !== '0')
 {
         //Check length 
         if(strlen($_POST['parent-category']) > 255 || strlen($_POST['parent-category']) < 3)
@@ -30,10 +30,8 @@ if(isset($_POST['parent-category']) && $_POST['parent-category'] != 0)
                 $errors[] = 'Parent category name must be between 3 and 200 characters';
         }else{
 		$parentId =  cleanString($dbc, $_POST['parent-category'], null);
-	}
-	
+	}	
 }
-
 //Insert category into database if no errors
 if(empty($errors))
 {
@@ -48,8 +46,7 @@ if(empty($errors))
 	{
 		$errors[] = 'Product category "' . $categoryName . '" already exists.';
 		goto reportErrors;
-	}	
-
+	}
 	//Build intert query
 	if(isset($parentId))
 	{
@@ -59,7 +56,6 @@ if(empty($errors))
 		$q = "INSERT INTO CATEGORIES (ID, NAME, PARENTID)
 		VALUES(UUID(), '$categoryName', NULL)";
 	}
-
 	//Execute query:
 	$r = mysqli_query($dbc, $q);
 
