@@ -11,135 +11,74 @@ function load_header()
 
 function load_primary_navigation($dbc)
 {
-	$q_parentCategories = "
-SELECT NAME, ID FROM CATEGORIES WHERE
-PARENTID IS NULL";
-
-$r_parentCategories = mysqli_query($dbc, $q_parentCategories);
-
-
-//Begin html list of categories
-echo "<ul id=\"primaryNav\">\n";
-/* Foreach parent category echo category parent and check for sub categories.
-    If a subcategory exists for the parent, echo this into the html list markup.
-    
-    Note- This is not a recursive solution, it only goes down three levels
-    (Parent = level1, subcategory 1 = level2,  subcategory2 = level3)
+/*
+	This function (load_primary_navigation)
+	is simply a wrapper function which calls
+	getParentCategories($dbc), and in turn
+	hasSubcategories($dbc)
 */
-while($category = mysqli_fetch_array($r_parentCategories))
+	getParentCategories($dbc);
+}
+
+function getParentCategories($dbc)
 {
-  
-  echo "\t<li><a href=\""; 
-  echo BASE_URL . category_to_urlsafe($dbc, $category['ID']);
-  echo '" title="Go to ' . category_to_urlsafe($dbc, $category['ID']) . ' section">' . $category['NAME'] . '</a>';
-  
-   //Get sub categories (if any)
-    $q_getFirstSubcategories = '
-    SELECT NAME, ID FROM CATEGORIES
-    WHERE PARENTID = "' . $category['ID'] . '"' ;
-     
-    $r_getFirstSubcategories = mysqli_query($dbc, $q_getFirstSubcategories);
+        /* 
+                Returns an arry of parent category names and ids or false if no parent
+        */
 
-    if(mysqli_num_rows($r_getFirstSubcategories) > 0) //Echo first subcategory
-    {
-      echo "\n\t<ul>";
-      while($firstSubcat =  mysqli_fetch_array($r_getFirstSubcategories))
-      {
-	echo "\n\t\t<li><a href=\"";  
-	//add build link to this category
-	echo category_to_urlsafe($dbc, $category['ID']) . '/'; //Top level link
-	echo category_to_urlsafe($dbc, $firstSubcat['ID']); //Subcategory link
-	echo '" title="Go to ' . category_to_urlsafe($dbc, $category['ID']) . ' ' . category_to_urlsafe($dbc, $firstSubcat['ID']) . ' section';
-	echo '">';
-	echo $firstSubcat['NAME'] . '</a>'; 
+        $q = "SELECT NAME, ID FROM CATEGORIES WHERE PARENTID IS NULL";
+        $r = mysqli_query($dbc, $q);
 
-	load_subcategory($dbc, $firstSubcat['ID']);
-	 
-      }//End echo each subcategory
-      echo "</ul>\n";
-    }//End echo if a subcategory exists.
-    
-    echo "</li>\n";
-    
-}//Echo each category
+        echo '<ul id="nav1">';
+        while($category = mysqli_fetch_array($r))
+        {
+                $title = 'Go to ' . $category['NAME'] . ' ';
+                $link = BASE_URL . $category['NAME'] . '/';
 
-echo '</ul>';
+                echo "<li><a href=\"$link\" title=\"" . $title . '">';
+                echo $category['NAME'] . '</a>';
 
-}//End load_primary_navigation($dbc)
-
-function load_subcategory($dbc, $id)
-{
-   $q = "SELECT NAME, ID FROM CATEGORIES WHERE
-		  PARENTID = '$id'";
-		  		  
-	    $r = mysqli_query($dbc, $q);
-	    
-	    if(mysqli_num_rows($r) > 0)
-	    {
-	    
-	      echo "\n\t<ul>";
-		while($subcategory = mysqli_fetch_array($r))
-		{
-		  echo "\n\t<li>";
-		  echo '<a href="' . category_to_urlsafe($dbc, $subcategory['ID']);
-		  echo '">' . $subcategory['NAME'] . '</a></li>';
-		}
-	      echo "\n</ul>";
-	    }else{
-	      
-		echo "</li>";
-	    }
-}//End load_subcategory($dbc, $id)
+                while(hasSubCategories($dbc, $category['ID'], $title, $link))
+                {
+                        hasSubCategories($dbc, $category['ID'], $title, $link);
+                }
+                echo "\n</ul>\n";
+        }
 
 
-function getParentCategories($dbc, $id)
-{
-	/* 
-		Returns an arry of parent category names and ids or false if no parent
-	*/
-	//Clean id
-	$id = mysqli_real_escape_string($dbc, $id);
+        echo '</ul>';
 
-	$q = "SELECT NAME, PARENT, ID FROM CATEGORIES WHERE ID = '$id' AND PARENT IS NULL";
-	$r = mysqli_query($dbc, $q);
-	
-	echo '<ul id="nav1">';
-	while($category = mysqli_fetch_array($r))
-	{
-		$titleString = 'Go to ' . $category['NAME'] . ' ';
-		$link = BASE_URL . $category['NAME'] . '/';
 
-		echo '<li><a href="#" title="' . $titleString . '">' . $link . '</a>';
-
-		while(hasSubCategories($dbc, $category['ID'])
-		{
-			hasSubCategories($dbc, $category['ID']);
-		}
-		echo "\n</ul>\n";
-	}
-	
-
-	echo '</ul>';	
-		
-	
 }//End getParentCategories
 
-function hasSubCategories($dbc, $id)
+function hasSubCategories($dbc, $id, $title, $link)
 {
-	$q = "SELECT NAME FROM CATEGORIES WHERE PARENTID = '$id'";
-	$r = mysqli_query($dbc, $q);
+        $q = "SELECT NAME, ID FROM CATEGORIES WHERE PARENTID = '$id'";
+        $r = mysqli_query($dbc, $q);
 
-	echo "\n<ul>";
+        echo "\n<ul>";
 
-	while($category = mysqli_fetch_array($r))
-	{
-		echo "\n<li>" . $category['NAME'];	
-		hasSubCategories($dbc, $category['ID'];
-		echo "\n</ul>";
-	}		
+        $preserveTitleBase = $title;
 
-	return false;
-}//End hasParent
+        while($category = mysqli_fetch_array($r))
+       {
+                $title = ' ' . $preserveTitleBase . '-> ' . $category['NAME'];
+                echo "\n<li>";
+                //Anchor
+                echo '<a href="' . $link;
+                echo category_to_urlsafe($dbc, $category['ID']) . '" ';
+                //Title tag
+                echo 'title="' . $title . '">';
+                echo  $category['NAME'];
+                //Close Anchor
+                echo '</a>';
+                hasSubCategories($dbc, $category['ID'], $title, $link);
+                echo "\n</ul>";
+        }
+
+        return false;
+}//End hasSubCategories
+
 
 function load_footer()
 {

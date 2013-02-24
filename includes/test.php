@@ -5,8 +5,9 @@
 </head>
 <body>
 <?php
+include('global-functions.incl.php');
 $dbc = mysqli_connect('localhost', 'unicenta', 'password', 'unicenta');
-define('BASE_URL', 'example.com');
+define('BASE_URL', 'http://example.com/');
 getParentCategories($dbc);
 
 function getParentCategories($dbc)
@@ -21,14 +22,15 @@ function getParentCategories($dbc)
         echo '<ul id="nav1">';
         while($category = mysqli_fetch_array($r))
         {
-                $titleString = 'Go to ' . $category['NAME'] . ' ';
+                $title = 'Go to ' . $category['NAME'] . ' ';
                 $link = BASE_URL . $category['NAME'] . '/';
 
-                echo '<li><a href="#" title="' . $titleString . '">' . $link . '</a>';
+                echo "<li><a href=\"$link\" title=\"" . $title . '">';
+		echo $category['NAME'] . '</a>';
 
-                while(hasSubCategories($dbc, $category['ID']))
+                while(hasSubCategories($dbc, $category['ID'], $title, $link))
                 {
-                        hasSubCategories($dbc, $category['ID']);
+                        hasSubCategories($dbc, $category['ID'], $title, $link);
                 }
                 echo "\n</ul>\n";
         }
@@ -39,17 +41,28 @@ function getParentCategories($dbc)
 
 }//End getParentCategories
 
-function hasSubCategories($dbc, $id)
+function hasSubCategories($dbc, $id, $title, $link)
 {
         $q = "SELECT NAME, ID FROM CATEGORIES WHERE PARENTID = '$id'";
         $r = mysqli_query($dbc, $q);
 
         echo "\n<ul>";
 
+	$preserveTitleBase = $title;
+
         while($category = mysqli_fetch_array($r))
-        {
-                echo "\n<li>" . $category['NAME'];
-                hasSubCategories($dbc, $category['ID']);
+       {
+		$title = ' ' . $preserveTitleBase . '-> ' . $category['NAME'];
+                echo "\n<li>";
+		//Anchor
+		echo '<a href="' . $link;
+		echo category_to_urlsafe($dbc, $category['ID']) . '" ';
+		//Title tag
+		echo 'title="' . $title . '">';
+		echo  $category['NAME'];
+		//Close Anchor
+		echo '</a>';
+                hasSubCategories($dbc, $category['ID'], $title, $link);
                 echo "\n</ul>";
         }
 
