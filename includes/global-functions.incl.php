@@ -4,7 +4,7 @@ function report_errors($errors)
 	echo '<ul>';
 	foreach($errors as $error)
 	{
-		echo '<li>' . $error . '</li>';	
+		echo '<li>' . $error . '</li>';
 	}
 	echo '</ul>';
 }

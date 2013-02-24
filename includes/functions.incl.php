@@ -1,13 +1,12 @@
 <?php
 function load_header()
 {
-
-	//Include header image
-	if(file_exists(TEMPLATE_BASE_URI . 'images/' . HEADER_IMAGE))	{
-		echo '<img src="' . TEMPLATE_BASE_URL . 'images/' .HEADER_IMAGE . '" />';
-	}else{
-		echo '<img src="http://placehold.it/800x150" />';
-	}
+	echo "<header>\n";
+	
+	//Print site name in header
+	echo '<h1 id="siteName">' . SITE_NAME . "<h1>\n";
+	
+	echo "</header>\n";
 }
 
 function load_primary_navigation($dbc)
@@ -20,7 +19,7 @@ $r_parentCategories = mysqli_query($dbc, $q_parentCategories);
 
 
 //Begin html list of categories
-echo "<ul>\n";
+echo "<ul id=\"primaryNav\">\n";
 /* Foreach parent category echo category parent and check for sub categories.
     If a subcategory exists for the parent, echo this into the html list markup.
     
