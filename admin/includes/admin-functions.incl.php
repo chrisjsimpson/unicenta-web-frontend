@@ -15,4 +15,19 @@ function getProductCategories($dbc)
 	}
 
 	return $results;
-}
+}//En get get product categories
+
+function isValidCategory($dbc, $id)
+{
+	$id = mysqli_real_escape_string($dbc, $id);
+	$q = "SELECT ID FROM CATEGORIES WHERE
+		ID = '$id'";
+	$r = mysqli_query($dbc, $q);
+
+	if(mysqli_num_rows($r) == 1)
+	{
+		return true;
+	}else{
+		return false;
+	}
+}//End is valid category
