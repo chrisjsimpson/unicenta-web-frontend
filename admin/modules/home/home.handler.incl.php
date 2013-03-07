@@ -2,7 +2,7 @@
 	<li>Categories</li>
 		<ul>
 			<li><a href="<? echo ADMIN_BASE_URL; ?>?p=add-category">Add Category</a></li>
-			<li><a href="<? echo ADMIN_BASE_URL; ?>?p=delete-category">Delete Category</li>
+			<li><a href="<? echo ADMIN_BASE_URL; ?>?p=delete-category">Delete Category</a></li>
 		</ul>
 	<li>Products</li>
 		<ul> 
