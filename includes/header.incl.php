@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
+<meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="<?php
 //Include stylesheet
 echo TEMPLATE_BASE_URL . 'css/styles.css';
 ?>
 " />
 <title><?php echo $title ?></title>
-</head>
 <body>
 <?php
 //Load page header

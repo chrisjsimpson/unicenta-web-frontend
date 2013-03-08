@@ -4,7 +4,7 @@ function load_header()
 	echo "<header>\n";
 	
 	//Print site name in header
-	echo '<h1 id="siteName">' . SITE_NAME . "<h1>\n";
+	echo '<h1 id="siteName">' . SITE_NAME . "</h1>\n";
 	
 	echo "</header>\n";
 }
@@ -35,7 +35,7 @@ function getParentCategories($dbc)
                 $parents = 'Go to ' . $category['NAME'] . ' ';
 		//Echo hrefs for parents
                 echo "<li><a href=\"";
-		urlencode(getCategoryString($dbc, $category['ID'], $title = null, $baseNameFlag = false, $prefix = rtrim(BASE_URL, '/'), $seperator = '/'));
+		getCategoryString($dbc, $category['ID'], $title = null, $baseNameFlag = false, $prefix = rtrim(BASE_URL, '/'), $seperator = '/', $encodeSpaces = true);
 		echo "\" title=\"" . $parents . '">';
                 echo $category['NAME'] . '</a>';
 
@@ -65,7 +65,7 @@ function hasSubCategories($dbc, $id, $parents)
                 echo "\n<li>";
                 //Anchor
                 echo '<a href="';
-		urlencode(getCategoryString($dbc, $category['ID'], $title = null, $baseNameFlag = false, $prefix = rtrim(BASE_URL, '/'), $seperator = '/'));
+		getCategoryString($dbc, $category['ID'], $title = null, $baseNameFlag = false, $prefix = rtrim(BASE_URL, '/'), $seperator = '/', $encodeSpaces = 'yes');
                 echo '" title="';
                 //Title tag
                 getCategoryString($dbc, $category['ID'], null, false, 'Go to:', ' -> ');
@@ -80,7 +80,7 @@ function hasSubCategories($dbc, $id, $parents)
 }//End hasSubCategories
 
 
-function getCategoryString($dbc, $id, $title = null, $baseNameFlag = false, $prefix = null, $seperator = null)
+function getCategoryString($dbc, $id, $title = null, $baseNameFlag = false, $prefix = null, $seperator = null, $encodeSpaces = false)
 {
 	if(!$baseNameFlag)
 	{
@@ -104,12 +104,19 @@ function getCategoryString($dbc, $id, $title = null, $baseNameFlag = false, $pre
 
 	  list($parentName, $id) = mysqli_fetch_array($r);
 	  $title = $parentName . $seperator  . $title;
-	  getCategoryString($dbc, $id, $title, $baseNameFlag = true, $prefix, $seperator);
+	  getCategoryString($dbc, $id, $title, $baseNameFlag = true, $prefix, $seperator, $encodeSpaces);
 	}else{
 		
-	$title = ' ' . $prefix . $title;
-	echo $title;
-	}
+	$title = $prefix . $title;
+
+		if($encodeSpaces)
+		{
+			echo str_replace(' ', '%20', $title);
+		}else{
+			echo  $title;
+		}
+
+	}//End if has parent
 }
 
 function load_footer()
