@@ -69,7 +69,6 @@ function getModuleAction()
 		//Strip beginning off query string (removing ?p=x&)
 		$action= substr($_SERVER['QUERY_STRING'], $position);
 		
-		echo "<h2>First action: '$action'</h2>";
 		//Strip following text after seccond '&' if exists
 		// e.g. 'delete&id=xxx' becomes 'delete'
 		//Find position of '&'
