@@ -12,6 +12,5 @@ switch(getModuleAction())
 	$page = 'home';
 	break;
 }
-
 //Include the requested page
 require_once($page . '.incl.php');

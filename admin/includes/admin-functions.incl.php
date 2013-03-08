@@ -68,19 +68,23 @@ function getModuleAction()
 		$position = strpos($_SERVER['QUERY_STRING'], '&') + 1;
 		//Strip beginning off query string (removing ?p=x&)
 		$action= substr($_SERVER['QUERY_STRING'], $position);
+		
+		echo "<h2>First action: '$action'</h2>";
 		//Strip following text after seccond '&' if exists
 		// e.g. 'delete&id=xxx' becomes 'delete'
 		//Find position of '&'
-		$limit = strpos($action, '&');
-		//Strip the '&'and anything following it
-		$action = substr($action,0, $limit);
+		if(strpos($action, '&') != false)
+		{
+			$limit =  strpos($action, '&');
+			//Strip the '&'and anything following it
+			$action = substr($action,0, $limit);
+			//Find next url argument '&' if exists and use as marker to strip out only module action
+			$length = strpos($_SERVER['QUERY_STRING'], '&', $position);
+		}else{ //End if more than one '&' in url, only take the first one.
+
+		}//End if only one '&' artument is present, process it
 		
-		//Find next url argument '&' if exists and use as marker to strip out only module action
-		$length = strpos($_SERVER['QUERY_STRING'], '&', $position);
-		
-		}//End get module action
-	//echo '<h3>First position: ' . $position . ' </h3>';
-	//echo "<h2>$action</h2>";
+	     }//End get module action
 	return $action;
 }//End getModuleAction
 
