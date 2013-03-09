@@ -1,0 +1,23 @@
+Begin
+  For-each top level category
+	
+	PRINT category name
+	
+	CHECK category for subcategories
+	
+	    IF category has subcategories
+	    
+		  PRINT category
+		   
+		  FOREACH subcategory
+		      CHECK for subcategories
+		  END FOREACH
+
+	    FI
+	   
+
+  
+  End for-each
+  
+  
+  

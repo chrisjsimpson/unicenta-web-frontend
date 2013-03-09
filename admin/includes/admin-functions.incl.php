@@ -32,61 +32,6 @@ function isValidCategory($dbc, $id)
 	}
 }//End is valid category
 
-function getModuleAction()
-{
-
-/*
-	A module action can be thought of the name for a task to
-	be performed on one of the pages (each page is a module).
-
-	Pages are chosen by the scheme BASE_URL/?p=page-name
-
-	Module actions (page actions) are requested in the url like so:
-	
-	BASE_URL/?p=page-name&moduleAction
-
-	For example the 'delete category' module is first accessed with the url:
-	BASE_URL/?p=delete-category
-
-	An action of the delete-category module is to delete the specified category:
-	BASE_URL/?p=delete-category?delete?id=x
-
-	In the above example 'delete-category' is the page (the module)
-	and 'delete' is the module action.
-
-	The remaning 'id=x' attribute is module spesific and used by the calling module
-
-	All this function does is strip the modle action from the url and 
-	returns it. It is used primarily in the page handler for each module
-
-*/
-	//Find pos of first & 
-	if(strpos($_SERVER['QUERY_STRING'], '&') == 0)
-	{
-		$action = 'home.incl.php';	
-	}else{
-		$position = strpos($_SERVER['QUERY_STRING'], '&') + 1;
-		//Strip beginning off query string (removing ?p=x&)
-		$action= substr($_SERVER['QUERY_STRING'], $position);
-		
-		//Strip following text after seccond '&' if exists
-		// e.g. 'delete&id=xxx' becomes 'delete'
-		//Find position of '&'
-		if(strpos($action, '&') != false)
-		{
-			$limit =  strpos($action, '&');
-			//Strip the '&'and anything following it
-			$action = substr($action,0, $limit);
-			//Find next url argument '&' if exists and use as marker to strip out only module action
-			$length = strpos($_SERVER['QUERY_STRING'], '&', $position);
-		}else{ //End if more than one '&' in url, only take the first one.
-
-		}//End if only one '&' artument is present, process it
-		
-	     }//End get module action
-	return $action;
-}//End getModuleAction
-
 function getCategoryName($dbc, $id)
 {
 	$id = mysqli_real_escape_string($dbc, $id);

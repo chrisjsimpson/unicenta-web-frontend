@@ -1,0 +1,21 @@
+RewriteEngine on
+
+RewriteRule contact index.php?p=contact [L]
+
+
+RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/index.php$
+RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/$
+RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/index.*$
+RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/templates.*$
+RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/images.*$
+RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/admin.*$
+
+
+RewriteRule (.*) index.php?p=view-category&id=%{REQUEST_URI} 
+
+#//If page request is not equal to:
+#	>contact
+#	>about
+#	>storefinder
+#	>basket
+# Then pass the request to index.php?p=request
