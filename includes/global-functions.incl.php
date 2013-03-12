@@ -103,3 +103,24 @@ $limit =  strpos($action, '&');
              }//End get module action
         return $action;
 }//End getModuleAction
+
+function  fetchProductsById($dbc, $catId){
+
+	$catId = mysqli_real_escape_string($dbc, $catId);
+	$q =  "SELECT * FROM PRODUCTS WHERE CATEGORY = '$catId'";
+	$r = mysqli_query($dbc, $q);
+
+	if(mysqli_num_rows($r) > 0)
+	{
+		while($product = mysqli_fetch_array($r))
+		{
+			$products[] = $product;
+		}
+
+		return $products;
+	}else{
+		return false;
+	}
+
+
+}//End  fetchProductsById
