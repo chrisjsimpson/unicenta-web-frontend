@@ -22,6 +22,7 @@
 *	Else, echo no products found
 *
 */
+
 echo '<hr />';
 $query = str_replace(WEB_ROOT, '', $_GET['id']);
 
@@ -61,7 +62,8 @@ if(mysqli_num_rows($r) == 1)
 		{
 			echo "\n<li class=\"product\">\n";
 			echo '<h4 class="productTitle">' .  $product['NAME'] . "\n</h4>";
-			//echo '<img src="'.$product['IMAGE'].'.jpg" />';
+			echo '<img src="';
+			echo BASE_URL . 'includes/getImage.php?id=' . $product['ID'] . '" width="100" height="100" />';
 			echo "\n<p class=\"productDesc\">" . $product['ATTRIBUTES'] . '</p>';
 			echo '</li>';
 
