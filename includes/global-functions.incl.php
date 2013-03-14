@@ -104,23 +104,36 @@ $limit =  strpos($action, '&');
         return $action;
 }//End getModuleAction
 
-function  fetchProductsById($dbc, $catId){
 
-	$catId = mysqli_real_escape_string($dbc, $catId);
-	$q =  "SELECT * FROM PRODUCTS WHERE CATEGORY = '$catId'";
-	$r = mysqli_query($dbc, $q);
+function getProductsInCategory($dbc, $id, &$products) //Pass $products by reference not value
+{               
 
-	if(mysqli_num_rows($r) > 0)
-	{
-		while($product = mysqli_fetch_array($r))
-		{
-			$products[] = $product;
-		}
-
-		return $products;
-	}else{
-		return false;
-	}
-
-
-}//End  fetchProductsById
+/*  
+ Get all products in this category (and subcategoryies)
+ hasSubCategories($dbc, $id); 
+*/
+                $id = mysqli_real_escape_string($dbc, $id);
+                $q_products = "SELECT * FROM PRODUCTS WHERE CATEGORY = '$id'";
+                $r_products = mysqli_query($dbc, $q_products);
+                
+                if(mysqli_num_rows($r_products) > 0)
+                {
+                while($product =  mysqli_fetch_array($r_products))
+                {
+                        array_push($products,$product);
+        
+                }//End check each category for products
+                }
+                        //Check if this product's category has a subcategory, and get products in it (repeat)
+                        $q = "SELECT ID FROM CATEGORIES WHERE PARENTID = '$id'";
+                        $r = mysqli_query($dbc, $q);
+	        if(mysqli_num_rows($r) >  0)
+        	{               
+                        //For each sub category found, get it's products
+                        while($subCat = mysqli_fetch_array($r))
+                        {
+                                getProductsInCategory($dbc, $subCat['ID'], $products);
+                        }
+        	}
+                return $products;
+}

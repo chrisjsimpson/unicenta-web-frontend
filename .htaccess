@@ -11,7 +11,6 @@ RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/images.*$
 RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/admin.*$
 RewriteCond %{REQUEST_URI} !/includes/getImage.php*$
 
-
 RewriteRule (.*) index.php?p=view-category&id=%{REQUEST_URI} 
 
 #//If page request is not equal to:

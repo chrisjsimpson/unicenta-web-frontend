@@ -39,9 +39,9 @@ function getParentCategories($dbc)
 		echo "\" title=\"" . $parents . '">';
                 echo $category['NAME'] . '</a>';
 
-                while(hasSubCategories($dbc, $category['ID'], $parents))
+                while(hasSubCategories($dbc, $category['ID']))
                 {
-                        hasSubCategories($dbc, $category['ID'], $parents);
+                        hasSubCategories($dbc, $category['ID']);
                 }
 		
                 echo "\n</ul>\n";
@@ -53,7 +53,7 @@ function getParentCategories($dbc)
 
 }//End getParentCategories
 
-function hasSubCategories($dbc, $id, $parents)
+function hasSubCategories($dbc, $id)
 {
         $q = "SELECT NAME, ID FROM CATEGORIES WHERE PARENTID = '$id'";
         $r = mysqli_query($dbc, $q);
@@ -72,7 +72,7 @@ function hasSubCategories($dbc, $id, $parents)
                 echo  '">' . $category['NAME'];
                 //Close Anchor
                 echo '</a>';
-                hasSubCategories($dbc, $category['ID'], $parents);
+                hasSubCategories($dbc, $category['ID']);
                 echo "\n</ul>";
         }
 

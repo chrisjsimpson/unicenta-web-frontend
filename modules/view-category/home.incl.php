@@ -1,7 +1,7 @@
 <?php
 /* 
 * Takes a query string $_GET['id'] from Apache mod_rewrite and processes it to display the 
-* coresponding category's product in an unordered list.
+* coresponding category's products in an unordered list.
 *
 *	The incomming string is like:
 *	'Mens/Accessories/Glasses/Sun glasses' (seperated by '/')
@@ -46,12 +46,13 @@ $query = cleanString($dbc, $query);
 $q = "SELECT ID FROM CATEGORIES WHERE NAME = '$query'";
 $r = mysqli_query($dbc, $q);
 
+
 if(mysqli_num_rows($r) == 1)
 {
 
 	list($catId) = mysqli_fetch_array($r);
 	//Fetch products in specified categy into unordered list
-	if($products = fetchProductsById($dbc, $catId))
+	if($products =  getProductsinCategory($dbc, $catId, $products = array()))
 	{	
 
 		//Product list
