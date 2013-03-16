@@ -10,6 +10,13 @@
  * 	If no product set yet assigned, give link to set one.
  */
 
+ //Echo if previous save was successful (users gets redirected to this page after 
+ // applying product attributes to a product.)
+ if(isset($_GET['saveSuccessful'])){
+ 	echo '<p class="successful">Adding product attributes was successful.</p>';
+ }
+ 
+ 
  $productId = cleanString($dbc, $_GET['id']);
  
  $productDetails = getProductDetails($dbc, $productId);
@@ -94,6 +101,7 @@ if(mysqli_num_rows($r) == 1) //Got attribute set ID. Use this to show product va
 		//Add another variation option (javascript?)
 		echo '<br /><input type="button" name="addAnoth" value="Add another variation (Not yet implimented!)" />';
 		echo '<br /><input type="submit" name="submit" value="Save" />';
+		echo '<input type="hidden" name="productId" value="' . $productDetails['ID'] . '" />';
 		echo '<input type="hidden" name="submitted" value="TRUE" />';
 		
 		//End add attributes <form>

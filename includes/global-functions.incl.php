@@ -190,3 +190,17 @@ function getProductDetails($dbc, $id)
 	 	return false; //Product not found
 	 }
 }
+
+function uuid($dbc)
+{
+	/* Returns a UUID by using mysql's engine */
+	list($uuid) = mysqli_fetch_array(mysqli_query($dbc, "SELECT UUID()"));
+	
+	if($uuid)
+	{
+		return $uuid;
+	}else{
+		return false;
+	}
+	
+}//End uuid($dbc)
