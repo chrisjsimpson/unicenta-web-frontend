@@ -16,12 +16,19 @@ $p = $_GET['p'];
 		case 'add-product':
 		$title = "Add a product";
 		break;
+		
+		case 'add-attributes':
+		$title = 'Add attributes to products';
+		break;
 
 		default: //If no match, load admin home page for login
 		$title = 'Admin Welcome';
 		break; 
 	}//End page switch
 
+//Load site-wide config file
+	require_once '../includes/config.incl.php';
+	
 //Load admin config file
 	require_once('includes/admin-config.incl.php');
 //Load global functions

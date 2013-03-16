@@ -67,7 +67,7 @@ if(mysqli_num_rows($r) == 1)
 			echo BASE_URL . 'includes/getImage.php?id=' . $product['ID'] . '" width="100" height="100" />';
 			echo "\n<p class=\"productDesc\">" . $product['ATTRIBUTES'] . '</p>';
 			echo '</li>';
-
+			
 		}
 		echo "\n</ul>"; //Terminate product list
 

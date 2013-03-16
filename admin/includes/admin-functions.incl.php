@@ -54,3 +54,28 @@ function getCategoryName($dbc, $id)
 		return false;
 	}
 }
+
+function getAttributeValuesFromAttrId($dbc, $id)
+{
+	$id = cleanString($dbc, $id);
+	$values = array();
+	
+	$q = "SELECT ID, VALUE FROM ATTRIBUTEVALUE WHERE ATTRIBUTE_ID = '$id'";
+	//echo $q;
+	$r = mysqli_query($dbc, $q);
+	
+	if(mysqli_num_rows($r) > 0)
+	{
+		//Put each attribute value into an array to be returned by function
+		while($allValues = mysqli_fetch_array($r, MYSQLI_ASSOC))
+		{
+			$values[$allValues['ID']] = $allValues['VALUE'];
+		}
+			
+		return $values;
+		
+	}else{
+		return false;
+	}
+	
+}// End getAttributeValuesFromAttrId($dbc, $id)

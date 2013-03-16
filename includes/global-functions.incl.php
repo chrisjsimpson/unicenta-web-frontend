@@ -112,6 +112,19 @@ function getProductsInCategory($dbc, $id, &$products) //Pass $products by refere
  Get all products in this category (and subcategoryies)
  hasSubCategories($dbc, $id); 
 */
+
+		//Check if requesting for all products in any category
+		if(strtolower($id) == 'any')
+		{
+          $q_products = "SELECT * FROM PRODUCTS";
+         $r_products = mysqli_query($dbc, $q_products);
+		 
+		 	while($product = mysqli_fetch_array($r_products))
+			{
+				$products[] = $product;
+			}//End put all products into the $products array
+		}else{
+
                 $id = mysqli_real_escape_string($dbc, $id);
                 $q_products = "SELECT * FROM PRODUCTS WHERE CATEGORY = '$id'";
                 $r_products = mysqli_query($dbc, $q_products);
@@ -135,5 +148,45 @@ function getProductsInCategory($dbc, $id, &$products) //Pass $products by refere
                                 getProductsInCategory($dbc, $subCat['ID'], $products);
                         }
         	}
+        }//End else (if 'any' category requested, simply spit back all products in database)
                 return $products;
+}
+
+function getProductNameFromId($dbc, $id)
+{
+	/* Returns the product name from the id */
+	$id = cleanString($dbc, $id);
+	
+	$q = "SELECT NAME FROM PRODUCTS WHERE ID = '$id'";
+	$r = mysqli_query($dbc, $q);
+	
+	if(mysqli_num_rows($r) == 1)
+	{
+		list($productName) = mysqli_fetch_array($r);
+		return $productName;
+	}else{
+		return false;
+	}
+}// End getProductNameFromId($dbc, $id)
+
+function getProductDetails($dbc, $id)
+{
+	/* Returns product details including:
+	 * >ID	REFERENCE	CODE	CODETYPE,
+	 * >NAME	PRICEBUY	PRICESELL	,
+	 * >CATEGORY	TAXCAT	ATTRIBUTESET_ID,
+	 * >STOCKCOST	STOCKVOLUME	IMAGE	,
+	 * >ISCOM	ISSCALE	ISKITCHEN	PRINTKB,
+	 * >SENDSTATUS	ISSERVICE	ATTRIBUTES
+	 */
+	 $id = cleanString($dbc, $id);
+	 $q = "SELECT * FROM PRODUCTS WHERE ID = '$id'";
+	 $r = mysqli_query($dbc, $q);
+	 
+	 if(mysqli_num_rows($r) == 1)
+	 {
+	 	return mysqli_fetch_array($r, MYSQLI_ASSOC);
+	 }else{
+	 	return false; //Product not found
+	 }
 }
