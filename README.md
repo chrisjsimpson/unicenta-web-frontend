@@ -10,7 +10,7 @@ Beginnings of a mission statement:
 ----------------------------------
 
 <ul>
-	<li>Unicenta Web Frontend is written in simmple, easy to follow code whith no 'back magic'
+	<li>Unicenta Web Frontend is written in simmple, easy to follow code whith no 'black magic'
 		<ul>
 			<li>This is to keep the barrier to entry for contributers as low as possible</li>
 		</ul>
