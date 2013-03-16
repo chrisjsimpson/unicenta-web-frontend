@@ -17,5 +17,10 @@ Beginnings of a mission statement:
 			</li>
 			
 	<li>Unicenta web frontend will strive to work alonsige Unicenta without requiring any major changes to 
-		the Unicenta codebase.</li> 
+		the Unicenta codebase.
+		<ul>
+			<li>Some <em>additions</em> to Unicenta's Database tables are required to better support viewing 
+				product variations online (e.g. to enbable a 'T-shirt' product to be viewed in all the various colors / sizes in stock). </li>
+		</ul>
+		</li> 
 </ul> 
