@@ -33,9 +33,53 @@ if(mysqli_num_rows($r) == 1) //Got attribute set ID. Use this to show product va
 	echo 'Base Sell Price: &pound;' . $productDetails['PRICESELL'] . '<br />';
 	echo 'In category: ' . getCategoryName($dbc, $productDetails['CATEGORY']) . '<br />';
 	echo '<img src="' . BASE_URL . 'includes/getImage.php?id=' . $productDetails['ID'];
-	echo '" width="150" height="150"  />';
+	echo '" width="150" height="150"  /><br />';
 	
 	//Load any existing variations of this product
+		//First get all variationsetIds
+		$q_getVariations = "
+		SELECT VARIATIONSET.ID AS 'VARIATIONSET',
+		SELLPRICE, STOCK_LEVEL
+		FROM VARIATIONSET
+		WHERE FK_PRODUCT_ID = '{$productDetails['ID']}'
+		ORDER BY VARIATIONSET";
+			
+		$r_getVariations = mysqli_query($dbc, $q_getVariations);
+
+	//Get attribute headings (e.g. size and colour) = heading for size, heading for colour..n
+	echo "\n<table name=\"productVariations\" border=\"1\" >";
+	$attributeNames = getAttributeNamesForProduct($dbc, $productDetails['ID']);
+	
+	//Foreach attribute name, create table heading
+	echo "\n<tr>"; //Tables heading row
+	foreach($attributeNames as $value)
+	{
+		echo "\n\t<th>$value</th>";
+	}
+		echo "\n\t<th>Sell Price</th>";
+		echo "\n\t<th>Stock Level</th>";
+	echo "\n</tr>";//End table heading row
+	
+	//Echo each variations attributes values
+	while($variation = mysqli_fetch_array($r_getVariations, MYSQLI_ASSOC))
+	{
+		echo "\n\t<tr>";//Begin table row for variation
+		$values = getAttributeValuesFromVariationSetId($dbc, $variation['VARIATIONSET']);
+		
+		//Echo each attribute value into table
+		foreach ($values as $value) {
+			echo "\n<td>$value</td>";
+		}
+		
+		//Echo sell price
+			echo "\n<td>{$variation['SELLPRICE']}</td>";
+		//Echo stock level
+			echo "\n<td>{$variation['STOCK_LEVEL']}";
+		
+		echo "\n\t</tr>";//End table row for variation
+	}
+	
+	echo "\n</table>";//End existing product variations table
 	
 	//End load any existing variations of this product
 	
@@ -127,9 +171,7 @@ if(mysqli_num_rows($r) == 1) //Got attribute set ID. Use this to show product va
 	GROUP BY ATTRIBUTE.NAME, VALUE';
 	
 	$r = mysqli_query($dbc, $q);
-	
-	//echo '<br />' . $q;
-	
+		
 	//Echo each option into drop-down lists
 	
 }else{//Ask to assign an attribute set first

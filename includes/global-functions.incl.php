@@ -204,3 +204,67 @@ function uuid($dbc)
 	}
 	
 }//End uuid($dbc)
+
+function getAttributeNamesForProduct($dbc, $productId)
+{
+	$productId = cleanString($dbc, $productId);
+	
+	$q = "
+	SELECT ATTRIBUTE.NAME
+	FROM PRODUCTS
+	JOIN ATTRIBUTESET ON
+	PRODUCTS.ATTRIBUTESET_ID = ATTRIBUTESET.ID
+	JOIN ATTRIBUTEUSE ON
+	ATTRIBUTESET.ID = ATTRIBUTEUSE.ATTRIBUTESET_ID
+	JOIN ATTRIBUTE ON
+	ATTRIBUTEUSE.ATTRIBUTE_ID = ATTRIBUTE.ID
+	WHERE PRODUCTS.ID = '$productId'
+	ORDER BY LINENO";
+
+	
+	$r = mysqli_query($dbc, $q);
+
+	while($arrtibuteName = mysqli_fetch_array($r, MYSQL_ASSOC))
+	{
+		$arrtibuteNames[] = $arrtibuteName;
+	}
+	
+	foreach($arrtibuteNames as $key)
+	{
+		foreach($key as $value){
+			$result[] = $value;
+		}
+	}
+	return $result;
+		
+}// End getAttributeNamesForProduct()
+
+function getAttributeValuesFromVariationSetId($dbc, $variationId)
+{
+	$variationId = cleanString($dbc, $variationId);
+	
+	$q = "
+	SELECT VALUE AS 'Attribute'
+	FROM VARIATIONSET
+	JOIN VARIATION ON
+	VARIATIONSET.ID = VARIATION.FK_VARIATION_SET
+	JOIN ATTRIBUTEVALUE ON
+	VARIATION.FK_ATTRIBUTE_VALUE = ATTRIBUTEVALUE.ID
+	JOIN ATTRIBUTE ON
+	ATTRIBUTEVALUE.ATTRIBUTE_ID = ATTRIBUTE.ID
+	JOIN ATTRIBUTEUSE ON
+	ATTRIBUTE.ID = ATTRIBUTEUSE.ATTRIBUTE_ID
+	WHERE VARIATIONSET.ID = '{$variationId}'
+	GROUP BY VALUE
+	ORDER BY LINENO";
+
+	$r = mysqli_query($dbc, $q);
+	
+	while($result = mysqli_fetch_array($r, MYSQLI_ASSOC))
+	{
+		$attributes[] =  $result['Attribute'];
+	}
+	
+	return $attributes;	
+	
+}//getAttributeValuesFromVariationSetId($dbc, $variationId)
