@@ -49,6 +49,8 @@ function category_to_urlsafe($dbc, $id)
 
 }//End category_to_websafe($dbc, $id)
 
+
+
 function getModuleAction()
 {
 
@@ -268,3 +270,55 @@ function getAttributeValuesFromVariationSetId($dbc, $variationId)
 	return $attributes;	
 	
 }//getAttributeValuesFromVariationSetId($dbc, $variationId)
+
+
+function displayProduct($dbc, $id)
+{
+	/* Displays all product data in a self-contained <div>.
+	 * Note: This function does not show product variation options 
+	 * (e.g. Which size / colour is in stock etc)
+	 */
+	$product = getProductDetails($dbc, $id);
+	
+	echo "\n<div class=\"productWrapper\">\n";
+	//print image first
+	echo "\n\t<img src=\"" . BASE_URL . "includes/getImage.php?id=" . $product['ID'] . '" />';
+	echo "\n\t<h1 class=\"productTitle\">" . $product['NAME'] . "</h1>";
+	//Product price:
+	echo "\n\t<span class=\"productPrice\">&pound;" . $product['PRICESELL'] . '</span>';
+	//Product description
+	echo "\n\t<p class=\"productDesc\">" . $product['ATTRIBUTES'];
+	echo "\n</div><!-- End .productWrapper -->\n";
+	
+	showBuyingOptions($dbc, $product['ID']);
+}
+
+function showBuyingOptions($dbc, $productId)
+{
+	/* Works out and displays all the various product buying options
+	 * For example: A T-Shirt product's various colours and sizes availability & price.
+	 */
+	 if(validProduct($dbc, $productId))//Check valid product passed
+	 {
+		
+	 }else{// End check is valid product
+	 	return false;
+	 }//End invalid product
+	 
+}//End showBuyingOptions($dbc, $productId) function
+
+function validProduct($dbc, $productId)
+{
+	/* Checks to make sure referenced product exists in the database  */
+	$productId = cleanString($dbc, $productId);
+	$q = "SELECT ID FROM PRODUCTS WHERE ID = '$productId'";
+	$r = mysqli_query($dbc, $q);
+	
+	if(mysqli_num_rows($r) == 1)
+	{
+		return true;
+	}else{
+		return false;
+	}
+}
+

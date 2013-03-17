@@ -68,6 +68,9 @@ if(mysqli_num_rows($r) == 1)
 			echo "\n<p class=\"productDesc\">" . $product['ATTRIBUTES'] . '</p>';
 			echo '</li>';
 			
+			echo "<br />Product link: <a href=\"";
+			//Build product link
+			echo BASE_URL . 'view/' . urlencode($product['NAME']) . '/' . mb_substr($product['ID'], 0, 2) . "\">Link</a>";
 		}
 		echo "\n</ul>"; //Terminate product list
 

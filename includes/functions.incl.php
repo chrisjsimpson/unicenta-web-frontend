@@ -4,7 +4,7 @@ function load_header()
 	echo "<header>\n";
 	
 	//Print site name in header
-	echo '<h1 id="siteName">' . SITE_NAME . "</h1>\n";
+	echo '<span id="siteName">' . SITE_NAME . "</span>\n";
 	
 	echo "</header>\n";
 }
