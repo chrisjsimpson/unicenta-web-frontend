@@ -6,7 +6,6 @@ $p = $_GET['p'];
 	$p = 'home';
 }
 
-
 //Get all possible pages:
 
 $pages = array(
@@ -30,11 +29,11 @@ $pages = array(
 		case 'Clothing':
 		$title = 'Discount Clothing';
 		break;
-
-		case 'add-product':
-		$title = "Add a product";
+		
+		case 'view-product':
+		$title =  'View Products';
 		break;
-
+		
 		default: //If no match, load homepage
 		$title = 'Welcome';
 		break; 

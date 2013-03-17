@@ -1,7 +1,7 @@
 RewriteEngine on
 
 RewriteRule contact index.php?p=contact [L]
-
+RewriteRule view/(.*) index.php?p=view-product&id=$1 [L]
 
 RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/index.php$
 RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/$
@@ -11,7 +11,7 @@ RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/images.*$
 RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/admin.*$
 RewriteCond %{REQUEST_URI} !/includes/getImage.php*$
 
-RewriteRule (.*) index.php?p=view-category&id=%{REQUEST_URI} 
+RewriteRule (.*) index.php?p=view-category&id=%{REQUEST_URI} [L] 
 
 #//If page request is not equal to:
 #	>contact
