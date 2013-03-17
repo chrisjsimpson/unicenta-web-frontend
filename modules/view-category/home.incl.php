@@ -63,14 +63,17 @@ if(mysqli_num_rows($r) == 1)
 		{
 			echo "\n<li class=\"product\">\n";
 			echo '<h4 class="productTitle">' .  $product['NAME'] . "\n</h4>";
+			//Product image
+				//Link around image
+				echo '<a href="' . getProductUrl($dbc, $product['ID']) . '">';
 			echo '<img src="';
-			echo BASE_URL . 'includes/getImage.php?id=' . $product['ID'] . '" width="100" height="100" />';
+			echo BASE_URL . 'includes/getImage.php?id=' . $product['ID'] . '" width="100" height="100" /></a>';
 			echo "\n<p class=\"productDesc\">" . $product['ATTRIBUTES'] . '</p>';
 			echo '</li>';
 			
 			echo "<br />Product link: <a href=\"";
 			//Build product link
-			echo BASE_URL . 'view/' . urlencode($product['NAME']) . '/' . mb_substr($product['ID'], 0, 2) . "\">Link</a>";
+			echo getProductUrl($dbc, $product['ID']) . "\">Link</a>";
 		}
 		echo "\n</ul>"; //Terminate product list
 

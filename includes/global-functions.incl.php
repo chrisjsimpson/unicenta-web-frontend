@@ -223,22 +223,26 @@ function getAttributeNamesForProduct($dbc, $productId)
 	WHERE PRODUCTS.ID = '$productId'
 	ORDER BY LINENO";
 
-	
 	$r = mysqli_query($dbc, $q);
 
-	while($arrtibuteName = mysqli_fetch_array($r, MYSQL_ASSOC))
+	if(mysqli_num_rows($r) > 0) //Only get attributes if they exist!
 	{
-		$arrtibuteNames[] = $arrtibuteName;
-	}
-	
-	foreach($arrtibuteNames as $key)
-	{
-		foreach($key as $value){
-			$result[] = $value;
+
+		while($arrtibuteName = mysqli_fetch_array($r, MYSQL_ASSOC))
+		{
+			$arrtibuteNames[] = $arrtibuteName;
 		}
-	}
-	return $result;
 		
+		foreach($arrtibuteNames as $key)
+		{
+			foreach($key as $value){
+				$result[] = $value;
+			}
+		}
+		return $result;
+	}else{
+		return false; //No attributes set for the product
+	}	
 }// End getAttributeNamesForProduct()
 
 function getAttributeValuesFromVariationSetId($dbc, $variationId)
@@ -300,6 +304,47 @@ function showBuyingOptions($dbc, $productId)
 	 */
 	 if(validProduct($dbc, $productId))//Check valid product passed
 	 {
+		//First get all variation attributes from product id:
+		if($options = getAttributeNamesForProduct($dbc, $productId))
+		{
+		
+			//Print each attribute name into beginning drop-down <select>
+				//and for each attribute name, insert attribute values into <options>
+			foreach ($options as $option) 
+			{
+				echo "\n";
+				echo '<select name="' . $option . '" required>';
+				echo "\n\t" . '<option value="">' . $option . '</option>';
+				
+					//Get possible attribte values for this attribute & product
+					$q = "
+					SELECT VALUE,
+					ATTRIBUTEVALUE.ID AS 'AttrId'
+					FROM PRODUCTS
+					JOIN VARIATIONSET ON
+					PRODUCTS.ID = VARIATIONSET.FK_PRODUCT_ID
+					JOIN VARIATION ON
+					VARIATIONSET.ID = VARIATION.FK_VARIATION_SET
+					JOIN ATTRIBUTEVALUE ON
+					VARIATION.FK_ATTRIBUTE_VALUE = ATTRIBUTEVALUE.ID
+					JOIN ATTRIBUTE ON
+					ATTRIBUTEVALUE.ATTRIBUTE_ID = ATTRIBUTE.ID
+					WHERE PRODUCTS.ID = '$productId' AND
+					ATTRIBUTE.NAME = '$option'
+					AND VARIATIONSET.STOCK_LEVEL > 0
+					GROUP BY VALUE";
+					$r =  mysqli_query($dbc, $q);
+			
+					while($attributeValue = mysqli_fetch_array($r))
+					{
+						echo "\n\t\t" . '<option value="' . $attributeValue['AttrId'] . '">';
+						echo $attributeValue['VALUE'] . '</option>';
+					}//End echo each attribute value
+		
+				//Close attribute </select>
+				echo "\n</select>";
+				}//End echo dropdowns for each attributes for this product.
+			}//End if getAttributeNamesForProduct succedes. 
 		
 	 }else{// End check is valid product
 	 	return false;
@@ -322,3 +367,16 @@ function validProduct($dbc, $productId)
 	}
 }
 
+function getProductUrl($dbc, $productId)
+{
+	$productId =  cleanString($dbc, $productId);
+	
+	if($productName = getProductNameFromId($dbc, $productId))
+	{
+			$productUrl = BASE_URL . 'view/' . urlencode($productName) . '/' . mb_substr($productId, 0, 2);
+			return $productUrl;
+	}else{
+		return false; //Invalid product id
+	}
+	
+}// End getProductUrl($dbc, $productId) function
