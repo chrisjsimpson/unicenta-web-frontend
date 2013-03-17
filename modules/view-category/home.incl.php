@@ -71,6 +71,11 @@ if(mysqli_num_rows($r) == 1)
 			echo "\n<p class=\"productDesc\">" . $product['ATTRIBUTES'] . '</p>';
 			echo '</li>';
 			
+			//Warn visitor if out-of-stock
+			if(!instock($dbc, $product['ID']))
+			{
+				echo "\n" . '<p class="outOfStock">Currently out of stock.</p>';
+			}//End if out-of-stock say so		
 			echo "<br />Product link: <a href=\"";
 			//Build product link
 			echo getProductUrl($dbc, $product['ID']) . "\">Link</a>";

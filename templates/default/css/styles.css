@@ -11,3 +11,8 @@
 {
 	float: left;
 }
+
+form input, form select
+{	
+	font-size: 1.25em;
+}

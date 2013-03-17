@@ -285,24 +285,45 @@ function displayProduct($dbc, $id)
 	$product = getProductDetails($dbc, $id);
 	
 	echo "\n<div class=\"productWrapper\">\n";
+	
+	//Begin buying form
+	echo "\n" . '<form id="addProductToBasket" method="post" action="';
+	//Print form action
+	echo BASE_URL . 'Basket">';
+	
 	//print image first
-	echo "\n\t<img src=\"" . BASE_URL . "includes/getImage.php?id=" . $product['ID'] . '" />';
+	echo "\n\t<img width=\"200\" height=\"200\" src=\"" . BASE_URL . "includes/getImage.php?id=" . $product['ID'] . '" />';
 	echo "\n\t<h1 class=\"productTitle\">" . $product['NAME'] . "</h1>";
 	//Product price:
 	echo "\n\t<span class=\"productPrice\">&pound;" . $product['PRICESELL'] . '</span>';
 	//Product description
 	echo "\n\t<p class=\"productDesc\">" . $product['ATTRIBUTES'];
-	echo "\n</div><!-- End .productWrapper -->\n";
 	
 	showBuyingOptions($dbc, $product['ID']);
-}
+	
+	//Product id
+	echo "\n\t" . '<input type="hidden" name="productId" value="' . $product['ID'] . '" />';	
+	//Submit button (if in-stock)
+	if(instock($dbc, $product['ID']))
+	{
+		echo "\n\t" . '<input type="submit" name="submit" value="ADD TO BAG" />';
+	}else{
+		echo "\n\t" . '<p class="outOfStock">Product currently out of stock</p>';
+	}
+	
+	//End </form>
+	echo "\n</form>";
+	
+	echo "\n</div><!-- End .productWrapper -->\n";
+	}
 
 function showBuyingOptions($dbc, $productId)
 {
+	$productId = cleanString($dbc, $productId);
 	/* Works out and displays all the various product buying options
 	 * For example: A T-Shirt product's various colours and sizes availability & price.
 	 */
-	 if(validProduct($dbc, $productId))//Check valid product passed
+	 if(validProduct($dbc, $productId) && instock($dbc, $productId))//Check valid product & at-least one variation in stock
 	 {
 		//First get all variation attributes from product id:
 		if($options = getAttributeNamesForProduct($dbc, $productId))
@@ -344,6 +365,7 @@ function showBuyingOptions($dbc, $productId)
 				//Close attribute </select>
 				echo "\n</select>";
 				}//End echo dropdowns for each attributes for this product.
+								
 			}//End if getAttributeNamesForProduct succedes. 
 		
 	 }else{// End check is valid product
@@ -380,3 +402,38 @@ function getProductUrl($dbc, $productId)
 	}
 	
 }// End getProductUrl($dbc, $productId) function
+
+function instock($dbc, $productId)
+{
+	/* Checks if a product is in stock by looking
+	 * for at-leat ONE item instock for the $productId in 
+	 * the VARIATIONSET table.
+	 */
+	 $productId = cleanString($dbc, $productId);
+	 
+	 $q = "
+	 SELECT VALUE,
+		ATTRIBUTEVALUE.ID AS 'AttrId'
+		FROM PRODUCTS
+		JOIN VARIATIONSET ON
+		PRODUCTS.ID = VARIATIONSET.FK_PRODUCT_ID
+		JOIN VARIATION ON
+		VARIATIONSET.ID = VARIATION.FK_VARIATION_SET
+		JOIN ATTRIBUTEVALUE ON
+		VARIATION.FK_ATTRIBUTE_VALUE = ATTRIBUTEVALUE.ID
+		JOIN ATTRIBUTE ON
+		ATTRIBUTEVALUE.ATTRIBUTE_ID = ATTRIBUTE.ID
+		WHERE PRODUCTS.ID = '$productId'
+		AND VARIATIONSET.STOCK_LEVEL > 0
+		GROUP BY VALUE";
+		
+	$r = mysqli_query($dbc, $q);
+	
+	if(mysqli_num_rows($r) > 0) //Atleast one product variation in-stock
+	{
+		return true;
+	}else{
+		return false; //Product is not in-stock
+	}
+	 
+}//End instock($dbc, $productId)

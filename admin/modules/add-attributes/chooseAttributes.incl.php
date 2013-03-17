@@ -72,7 +72,7 @@ if(mysqli_num_rows($r) == 1) //Got attribute set ID. Use this to show product va
 		}
 		
 		//Echo sell price
-			echo "\n<td>{$variation['SELLPRICE']}</td>";
+			echo "\n<td>&pound;{$variation['SELLPRICE']}</td>";
 		//Echo stock level
 			echo "\n<td>{$variation['STOCK_LEVEL']}";
 		
