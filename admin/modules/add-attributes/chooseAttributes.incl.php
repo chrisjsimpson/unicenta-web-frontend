@@ -7,7 +7,7 @@
  * 
  * 	Ask user to assign stock levels using product attributes sets
  * 
- * 	If no product set yet assigned, give link to set one.
+ * 	If no product attribute set yet assigned, give link to set one.
  */
 
  //Echo if previous save was successful (users gets redirected to this page after 

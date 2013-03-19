@@ -6,17 +6,12 @@
  * 
  * The above is then stored in the database so that product availability \
  * can be shown per attribute selects 
- * (if someone is looking for a T-shirt size Large color red, the stock level can be checked)
+ * (if someone is looking for a T-shirt size Large colour red, the stock level can be checked)
  */
-   
-  print_r($_POST);
-  
-  echo '<hr />';
-   
- 
+
 if($_POST['submitted'] && getProductNameFromId($dbc, $_POST['productId']))
 {
-	
+	$errors = array(); //Initiate errors array
 	//Create new variation id for VARIATION table
 	$variationId = uuid($dbc);
 	$productId = $_POST['productId'];
@@ -26,6 +21,8 @@ if($_POST['submitted'] && getProductNameFromId($dbc, $_POST['productId']))
 	//Get stock level for this variation
 	$stockLevel = $_POST['stock'][0];
 	
+	//initialise sha256 hash of product variation
+	$tobeHashed = $productId;   	
 	
 	//Loop through attribute groups storing their stock levels
 	foreach ($_POST as $attributeName=>$value) {
@@ -34,7 +31,8 @@ if($_POST['submitted'] && getProductNameFromId($dbc, $_POST['productId']))
 			&& $attributeName != 'stock') //Submit button and hidden inputs are not arrays
 		{
 			foreach ($value as $key => $attributeValue) {
-				echo $attributeValue . '<br />';
+				
+				$tobeHashed .= $attributeValue;
 				$attributeValue = cleanString($dbc, $attributeValue);
 				
 				//Insert value (e.g. colour 'blue') into VARIATIONSET table
@@ -47,13 +45,18 @@ if($_POST['submitted'] && getProductNameFromId($dbc, $_POST['productId']))
 		
 	}//End loop through each attribute value storing it in table VARIATIONSET using $variationId as group id.
 	
+	if(empty($errors))
+	{
+	//Sha256sum hash of productId & selected attributes
+		$hash = hash('sha256', $tobeHashed);
 	//Insert the new $variationId into VARIATION table
-	$q = "INSERT INTO VARIATIONSET (ID, FK_PRODUCT_ID, STOCK_LEVEL, SELLPRICE)
-			VALUES ('$variationId', '$productId', $stockLevel, $sellPrice)";
+	$q = "INSERT INTO VARIATIONSET (ID, FK_PRODUCT_ID, STOCK_LEVEL, SELLPRICE, VARIATIONSET_HASH_SHA256)
+			VALUES ('$variationId', '$productId', $stockLevel, $sellPrice, '$hash')";
 		
 	$r = mysqli_query($dbc, $q);
 	
 	if(!$r){ $errors[] =  'Error adding new Variation set for product attributes';}	
+	}//If no errors, try to add new VARIATIONSET to Database
 	
 	//If no errors, redirect back to the choose attributes page
 	if(empty($errors))
