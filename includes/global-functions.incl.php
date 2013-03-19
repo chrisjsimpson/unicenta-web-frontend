@@ -289,7 +289,7 @@ function displayProduct($dbc, $id)
 	//Begin buying form
 	echo "\n" . '<form id="addProductToBasket" method="post" action="';
 	//Print form action
-	echo BASE_URL . 'Basket">';
+	echo BASE_URL . 'Basket/add">';
 	
 	//print image first
 	echo "\n\t<img width=\"200\" height=\"200\" src=\"" . BASE_URL . "includes/getImage.php?id=" . $product['ID'] . '" />';
@@ -334,7 +334,7 @@ function showBuyingOptions($dbc, $productId)
 			foreach ($options as $option) 
 			{
 				echo "\n";
-				echo '<select name="' . $option . '" required>';
+				echo '<select name="attribute_' . $option . '" required>';
 				echo "\n\t" . '<option value="">' . $option . '</option>';
 				
 					//Get possible attribte values for this attribute & product
@@ -403,11 +403,16 @@ function getProductUrl($dbc, $productId)
 	
 }// End getProductUrl($dbc, $productId) function
 
-function instock($dbc, $productId)
+function instock($dbc, $productId, $variationFlag = false)
 {
 	/* Checks if a product is in stock by looking
 	 * for at-leat ONE item instock for the $productId in 
 	 * the VARIATIONSET table.
+	 * 
+	 * If the $variationFlag is set, $productId is presumed to be a 
+	 * variationset id, in the VARIATIONSET table. The function then  checks only 
+	 * the specified product variation stock level, for example 
+	 * only checking a 'Black T-shirt' in size 'small'
 	 */
 	 $productId = cleanString($dbc, $productId);
 	 
@@ -426,6 +431,12 @@ function instock($dbc, $productId)
 		WHERE PRODUCTS.ID = '$productId'
 		AND VARIATIONSET.STOCK_LEVEL > 0
 		GROUP BY VALUE";
+		
+	if($variationFlag)
+	{
+		$q = "SELECT STOCK_LEVEL FROM VARIATIONSET 
+			WHERE ID = '$productId'";
+	}//End $variationFlag is set, only check stock level for that specific product variation
 		
 	$r = mysqli_query($dbc, $q);
 	

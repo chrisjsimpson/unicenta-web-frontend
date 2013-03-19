@@ -47,6 +47,17 @@ $pages = array(
 	require_once('includes/global-functions.incl.php');
 
 //Load correct page
+	//Begin session
+	session_start();
+	/*Iniciate cart
+	if(!isset($_SESSION['cart']))
+	{
+			echo 'hereeeee';
+		
+		$_SESSION['cart'] = 0;
+	}
+	 * 
+	 */
 	//Load frontend functions
 	require_once('includes/functions.incl.php');
 	//Initialise template
