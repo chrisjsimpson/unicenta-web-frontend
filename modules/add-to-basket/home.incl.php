@@ -90,7 +90,6 @@ function addProductCart($variationId)
 	{
 		echo 'already in cart.';
 		$_SESSION['cart'][$variationId]++;
-		print_r($_SESSION);
 		
 	}else{
 		$_SESSION['cart'][$variationId] = 1;
