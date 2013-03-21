@@ -517,16 +517,3 @@ function cartEmpty($_SESSION)
 }//End cartEmpty($_SESSION)
 
 
-/*
- * 
- * removeProductCart($variationId)
- * 
- *
- */
-function removeProductCart($variationId)
-{
-	if(isset($_SESSION['cart'][$variationId]))
-	{
-		unset($_SESSION['cart'][$variationId]);
-	}
-}//End removeProductCart($variationId)

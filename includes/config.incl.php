@@ -15,5 +15,5 @@ define('TEMPLATE_BASE_URI', BASE_URI . 'templates/default/');
 define('TEMPLATE_BASE_URL', BASE_URL . 'templates/default/');
 define('TEMPLATE_INIT', TEMPLATE_BASE_URI . 'init.incl.php');
 
-define('yes', 'yes');
+define('here', 'here');
 

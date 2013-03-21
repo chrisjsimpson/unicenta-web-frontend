@@ -1,5 +1,7 @@
 <?php
 
+echo '<h2 id="viewBasketTitle">Your Basket</h2>';
+
 function getProductDetailsFromVariationId($dbc, $variationId)
 {
 	/*
@@ -109,6 +111,11 @@ if(!cartEmpty($_SESSION))
 			echo "\n\t\t<dt>$attribute</dt>"; //Definition title (e.g. 'Color')
 			echo "\n\t\t\t<dd>$value</dd>";  //Definition value (e.g. 'Blue');
 		}
+		
+		//Display Price
+		echo "\n\t\t<dt>Price</dt>"; 
+		echo "\n\t\t\t<dd>&pound;{$productDetails['SELLPRICE']}</dd>";  
+		
 		echo "\n\t</dl>"; //End definition list for product attributes list
 		//End product attributes box
 		echo "</div>";
