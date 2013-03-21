@@ -289,7 +289,7 @@ function displayProduct($dbc, $id)
 	//Begin buying form
 	echo "\n" . '<form id="addProductToBasket" method="post" action="';
 	//Print form action
-	echo BASE_URL . 'Basket/add">';
+	echo BASE_URL . 'Basket/add/">';
 	
 	//print image first
 	echo "\n\t<img width=\"200\" height=\"200\" src=\"" . BASE_URL . "includes/getImage.php?id=" . $product['ID'] . '" />';
@@ -501,6 +501,20 @@ function getVariationIdFromRequestArray($dbc, $_REQUEST)
 		return false;
 	}
 }//End getVariationIdFromHash($dbc, $hash)
+
+
+function cartEmpty($_SESSION)
+{
+	/*
+	 * Checks the $_SESSION['cart'] for any products
+	 */
+	if(isset($_SESSION['cart']) && count($_SESSION['cart']) > 0)
+	{
+		return false;
+	}else{
+		return true;
+	}
+}//End cartEmpty($_SESSION)
 
 
 /*

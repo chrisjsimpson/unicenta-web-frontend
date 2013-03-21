@@ -2,7 +2,10 @@ RewriteEngine on
 
 RewriteRule contact index.php?p=contact [L]
 RewriteRule view/(.*) index.php?p=view-product&id=$1 [L]
-RewriteRule Basket/(.*) index.php?p=add-to-basket&action=$1 [L]
+RewriteRule Basket/Notavailable/(.*) index.php?p=view-basket&variationNotAvailable=$1 [L]
+RewriteRule Basket/Remove/(.*) index.php?p=remove-from-basket&variationId=$1 [L]
+RewriteRule Basket/add/(.*) index.php?p=add-to-basket&action=$1 [L]
+RewriteRule Basket index.php?p=view-basket [L]
 
 RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/index.php$
 RewriteCond %{REQUEST_URI} !^/Dropbox/unicenta-web-frontend/$

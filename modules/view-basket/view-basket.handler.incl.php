@@ -1,13 +1,9 @@
 <?php
-/* Main page handler for view-category script */
+/* Main page handler for view-basket script */
 
 //Switch to load correct page
 switch(getModuleAction())
 {
-	case 'process':
-	$page = '';
-	break;
-
 	default:
 	$page = 'home';
 	break;

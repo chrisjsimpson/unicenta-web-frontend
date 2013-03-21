@@ -34,6 +34,10 @@ $pages = array(
 		$title =  'View Products';
 		break;
 		
+		case 'view-basket':
+		$title = 'View Basket';
+		break;
+		
 		default: //If no match, load homepage
 		$title = 'Welcome';
 		break; 
