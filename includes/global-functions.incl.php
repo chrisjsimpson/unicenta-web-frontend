@@ -448,3 +448,71 @@ function instock($dbc, $productId, $variationFlag = false)
 	}
 	 
 }//End instock($dbc, $productId)
+
+
+function getVariationIdFromRequestArray($dbc, $_REQUEST)
+{
+	/*
+	 *	Returns the product variation id by computing sha256 hash of a 
+	 *  product id, using passed attributes in the $_REQUEST array
+	*/
+	if(isset($_REQUEST['productId']) && validProduct($dbc, $_REQUEST['productId']))
+	{
+
+		$productId = $_REQUEST['productId'];
+		//Loop through $_REQUEST data to get attributes (which are prefixes with 'attribute_')
+		$attributeIds = array(); //Ready to store attributeIds
+		
+		foreach ($_REQUEST as $key => $value) {
+			
+			//Only get 'attribute_x' names & values ignoring submit, and other passed data 
+			if( strpos($key, 'attribute_') !== false)
+			{
+				//Store attribute ids into array
+				$attributeIds[] = $value;
+			}
+		}//End put each attribute id into $attributeIds[] array
+		
+		//Add product id to string to be hashed
+		$toBeHashed = $productId;
+		
+		if(!empty($attributeIds))
+		{
+			foreach ($attributeIds as $value) {
+				//Add each attribute to the string to be hashed
+				$toBeHashed .= $value;
+			}
+			//Sha256sum hash of productId & selected attributes
+			$hash = hash('sha256', $toBeHashed);
+		}
+	}//End work out variationId from combination of productid, and attributes sent
+	
+	$hash = cleanString($dbc, $hash);
+	
+	
+	$q = "SELECT ID FROM VARIATIONSET 
+		WHERE VARIATIONSET_HASH_SHA256 = '$hash'";
+	$r = mysqli_query($dbc, $q);
+	
+	if(list($variationId) =  mysqli_fetch_array($r))
+	{
+		return $variationId;
+	}else{
+		return false;
+	}
+}//End getVariationIdFromHash($dbc, $hash)
+
+
+/*
+ * 
+ * removeProductCart($variationId)
+ * 
+ *
+ */
+function removeProductCart($variationId)
+{
+	if(isset($_SESSION['cart'][$variationId]))
+	{
+		unset($_SESSION['cart'][$variationId]);
+	}
+}//End removeProductCart($variationId)
