@@ -517,3 +517,30 @@ function cartEmpty($_SESSION)
 }//End cartEmpty($_SESSION)
 
 
+function multipleBuyingOptions($dbc, $productId)
+{
+	/* 
+	 * Checks if product has multiple variations
+	 * e.g. multiple sizes and/or colours
+	 * Returns true or false
+	 */	 
+	 $productId = cleanString($dbc, $productId);
+	 
+	 if(validProduct($dbc, $productId))
+	 {
+		 $q = "SELECT VARIATIONSET.ID FROM VARIATIONSET
+		 		WHERE FK_PRODUCT_ID = '$productId'";
+				
+		 $r = mysqli_query($dbc, $q);
+		 if(mysqli_num_rows($r) > 1)
+		 {
+		 	return true; //YES more than one buying option
+		 }else{
+		 	return false; //Nope, only one buying option
+		 }
+	 }else{
+	 	return false;//Invalid productid
+	 }//End invalid productId
+}//End multipleBuyingOptions($dbc, $productId)
+
+

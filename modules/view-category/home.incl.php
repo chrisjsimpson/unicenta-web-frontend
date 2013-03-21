@@ -74,13 +74,21 @@ if(mysqli_num_rows($r) == 1)
 			echo "\n" . '<div class="productPrice">&pound;' . $product['PRICESELL'] . '</div>';
 			//End print product price
 			
-			echo '</li>';
-			
 			//Warn visitor if out-of-stock
 			if(!instock($dbc, $product['ID']))
 			{
 				echo "\n" . '<p class="outOfStock">Currently out of stock.</p>';
-			}//End if out-of-stock say so		
+			}//End if out-of-stock say so	
+			
+			//Show 'More options' button if more than one buying option (e.g. sizes, colours) exist:
+			if(multipleBuyingOptions($dbc, $product['ID']))
+			{
+				echo '<span class="moreBuyingOptions">More options...</span>';
+			}
+						
+			echo '</li>';//End product item list item
+			
+				
 		}
 		echo "\n</ul>"; //Terminate product list
 
