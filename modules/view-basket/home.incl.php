@@ -92,10 +92,10 @@ if(!cartEmpty($_SESSION))
 	foreach ($_SESSION['cart'] as $variationId => $quantity) 
 	{
 		list($productDetails, $attributes) = getProductDetailsFromVariationId($dbc, $variationId);	
+		echo "\n\t<li>{$productDetails['NAME']}";
 		//Product image:
 		echo "\n\t<img src=\"" . BASE_URL . 'includes/getImage.php?id=' . $productDetails['ID'];
 		echo '" width="90" height="90" />';
-		echo "\n\t<li>{$productDetails['NAME']}";
 		//Print product choices (variations) box
 		echo "\n\t<div class=\"basketProductAttributes\">";
 		

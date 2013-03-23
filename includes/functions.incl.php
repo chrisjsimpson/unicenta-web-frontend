@@ -17,7 +17,9 @@ function load_primary_navigation($dbc)
 	getParentCategories($dbc), and in turn
 	hasSubcategories($dbc)
 */
+	echo "\n<nav>";
 	getParentCategories($dbc);
+	echo "\n</nav>";
 }
 
 function getParentCategories($dbc)
@@ -29,7 +31,10 @@ function getParentCategories($dbc)
         $q = "SELECT NAME, ID FROM CATEGORIES WHERE PARENTID IS NULL";
         $r = mysqli_query($dbc, $q);
 
-        echo '<ul id="nav1">';
+	//Print link to basket
+	echo '<a href="' . BASE_URL . 'Basket"><p class="myBasketLink">My Basket</p></a>';
+
+        echo "\n" . '<ul id="nav1">';
         while($category = mysqli_fetch_array($r))
         {
                 $parents = 'Go to ' . $category['NAME'] . ' ';

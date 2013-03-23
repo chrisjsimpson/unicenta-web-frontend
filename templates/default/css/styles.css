@@ -2,6 +2,11 @@
 	display: block;
 }
 
+nav {
+	float: left;
+width: 20%;
+}
+
 #nav1
 {
 	/*float: left;
