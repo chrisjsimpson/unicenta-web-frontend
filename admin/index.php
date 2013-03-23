@@ -20,6 +20,10 @@ $p = $_GET['p'];
 		case 'add-attributes':
 		$title = 'Add attributes to products';
 		break;
+		
+		case 'edit-product-description':
+		$title = 'Edit product descriptions';
+		break;
 
 		default: //If no match, load admin home page for login
 		$title = 'Admin Welcome';
