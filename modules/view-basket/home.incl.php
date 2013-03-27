@@ -19,7 +19,7 @@ function getProductDetailsFromVariationId($dbc, $variationId)
 	 JOIN PRODUCTS ON 
 	 VARIATIONSET.FK_PRODUCT_ID = PRODUCTS.ID
 	 WHERE VARIATIONSET.ID = '$variationId'";
-	 
+
 	$r = mysqli_query($dbc, $q);
 	
 	if($r)//If get product details succeeds
@@ -84,18 +84,27 @@ if(isset($_GET['variationNotAvailable']))
 
 if(!cartEmpty($_SESSION))
 {
+	//Iniciate total price
+	$totalPrice = 0;
 	//Begin form
-	echo "\n<form name=\"cartContents\">";
+	echo "\n<form name=\"cartContents\" ";
+	
+	//Basket Form action
+	echo 'action="#">';
 	//Opening list for items in basket
 	echo "\n<ul id=\"basketProductList\">";
 	
 	foreach ($_SESSION['cart'] as $variationId => $quantity) 
 	{
 		list($productDetails, $attributes) = getProductDetailsFromVariationId($dbc, $variationId);	
-		echo "\n\t<li>{$productDetails['NAME']}";
+		//Add product price to $totalPrice:
+		$totalPrice += $productDetails['SELLPRICE'] * $quantity;
 		//Product image:
 		echo "\n\t<img src=\"" . BASE_URL . 'includes/getImage.php?id=' . $productDetails['ID'];
 		echo '" width="90" height="90" />';
+		//Product name:
+		echo "\n\t<li>{$productDetails['NAME']}";
+		
 		//Print product choices (variations) box
 		echo "\n\t<div class=\"basketProductAttributes\">";
 		
@@ -131,8 +140,18 @@ if(!cartEmpty($_SESSION))
 			
 	echo "\n</ul>"; //Ending list for basket list
 	
+	//Show cart total price:
+	echo '<p class="totalCostOfItems">&pound;' . $totalPrice . '</p>';
+	
 	//End form
 	echo "\n</form>";
+	
+	//Work out postage:
+	$postage = 10;
+	
+	//Paypal Form submission
+	include_once('generatePaypalCartSubmitForm.incl.php');
+	//End paypal form submission
 	
 }else{//End echo cart contents
 	echo 'No items in Basket yet.';

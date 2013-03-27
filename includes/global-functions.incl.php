@@ -374,19 +374,35 @@ function showBuyingOptions($dbc, $productId)
 	 
 }//End showBuyingOptions($dbc, $productId) function
 
-function validProduct($dbc, $productId)
+function validProduct($dbc, $productId, $variationId = false)
 {
 	/* Checks to make sure referenced product exists in the database  */
-	$productId = cleanString($dbc, $productId);
-	$q = "SELECT ID FROM PRODUCTS WHERE ID = '$productId'";
-	$r = mysqli_query($dbc, $q);
-	
-	if(mysqli_num_rows($r) == 1)
+	if(!$variationId)
 	{
-		return true;
-	}else{
-		return false;
-	}
+		$productId = cleanString($dbc, $productId);
+		$q = "SELECT ID FROM PRODUCTS WHERE ID = '$productId'";
+		$r = mysqli_query($dbc, $q);
+		
+		if(mysqli_num_rows($r) == 1)
+		{
+			return true;
+		}else{
+			return false;
+		}
+	}elseif($variationId)//End check if valid product id
+		{
+			$variationId = cleanString($dbc, $variationId);
+			$q = "SELECT ID FROM VARIATIONSET WHERE ID = '$variationId'";
+			$r = mysqli_query($dbc, $q);
+			
+			if(mysqli_num_rows($r) == 1)
+			{
+				return true;
+			}else{
+				return false;
+			}
+		}//End if $variationId set, check if that exists
+	
 }
 
 function getProductUrl($dbc, $productId)

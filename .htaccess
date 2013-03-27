@@ -1,5 +1,7 @@
 RewriteEngine on
 
+RewriteRule includes/ipn_listner.incl.php includes/ipn_listner.incl.php [L]
+
 RewriteRule contact index.php?p=contact [L]
 RewriteRule view/(.*) index.php?p=view-product&id=$1 [L]
 RewriteRule Basket/Notavailable/(.*) index.php?p=view-basket&variationNotAvailable=$1 [L]

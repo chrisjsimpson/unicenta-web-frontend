@@ -17,3 +17,5 @@ define('TEMPLATE_INIT', TEMPLATE_BASE_URI . 'init.incl.php');
 
 define('here', 'here');
 
+//Set if local or live development
+$local = true;
